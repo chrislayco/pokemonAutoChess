@@ -77,8 +77,8 @@ class Game extends Component {
                 FAIRY: 0,
                 ICE: 0,
                 FOSSIL: 0
-            }
-
+            },
+            life:100
           },
           gameState:{
             roundTime: '',
@@ -423,6 +423,7 @@ class Game extends Component {
             opponentAvatar={this.state.player.opponentAvatar}
             money={this.state.player.money}
             name={this.state.player.name}
+            life={this.state.player.life}
         />
         <GameDpsMeter
             dpsMeter={this.state.dpsMeter}

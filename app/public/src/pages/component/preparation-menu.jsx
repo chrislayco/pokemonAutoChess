@@ -20,11 +20,17 @@ class PreparationMenu extends Component{
                     <thead>
                         <tr>
                             <td>Player</td>
+                            <td>Role</td>
                             <td>Ready</td>
                         </tr>
                     </thead>
                     <tbody>
-                        {Array.from(this.props.users).map(this.createUser.bind(this))}
+                        {Array.from(this.props.users).sort((a,b)=>
+                        {
+                            let sa = a[1].isPlayer ? 1:0;
+                            let sb = b[1].isPlayer ? 1:0;
+                            return sb - sa;
+                        }).map(this.createUser.bind(this))}
                     </tbody>
                 </table>
                 <div style={{display: 'flex'}}>
@@ -32,6 +38,7 @@ class PreparationMenu extends Component{
                     <button style={buttonStyle} className='nes-btn is-success' onClick={this.props.startGame}>Start Game</button>
                     <button style={buttonStyle} className='nes-btn is-primary' onClick={this.props.addBot}>Add Bot</button>
                     <button style={buttonStyle} className='nes-btn is-primary' onClick={this.props.removeBot}>Remove Bot</button>
+                    <button style={buttonStyle} className='nes-btn' onClick={this.props.switch}>Switch to Observer/Player</button>
                 </div>
             </div>
     }
@@ -42,6 +49,7 @@ class PreparationMenu extends Component{
         const ready = v.ready ? 'V' : 'X';
         return <tr key={k}>
             <td><InlineAvatar avatar={v.avatar} name={v.name} elo={v.elo}/></td>
+            <td>{v.isPlayer ? 'Player': 'Observer'}</td>
             <td>{ready}</td>
         </tr>
     }

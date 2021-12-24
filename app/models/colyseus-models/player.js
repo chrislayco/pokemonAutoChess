@@ -11,7 +11,7 @@ const MapSchema = schema.MapSchema;
 const ArraySchema = schema.ArraySchema;
 
 class Player extends Schema {
-  constructor(id, name, elo, avatar, isBot, specialCells, mapType, rank, tileset) {
+  constructor(id, name, elo, avatar, isBot, specialCells, mapType, rank, tileset, isPlayer) {
     super();
     this.opponents = [];
     this.assign({
@@ -40,7 +40,8 @@ class Player extends Schema {
       elo: elo,
       tileset: tileset,
       opponentame:'',
-      opponentAvatar:''
+      opponentAvatar:'',
+      isPlayer: isPlayer
     });
   }
 

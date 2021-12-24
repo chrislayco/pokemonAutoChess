@@ -453,7 +453,6 @@ class OnLevelUpCommand extends Command {
 
 class OnJoinCommand extends Command {
   execute({client, options, auth}) {
-
     UserMetadata.findOne({'uid':auth.uid},(err, user)=>{
       if(user){
         this.state.players.set(client.auth.uid, new Player(
@@ -465,15 +464,13 @@ class OnJoinCommand extends Command {
           this.state.specialCells,
           this.state.mapType,
           this.state.players.size + 1,
-          user.map[this.state.mapType]
+          user.map[this.state.mapType],
+          this.room.options.users[auth.uid].isPlayer
       ));
       if(client && client.auth && client.auth.displayName){
         console.log(`${client.auth.displayName} ${client.id} join game room`);
       }
 
-      this.state.players.forEach(p=>{
-        console.log(p.name);
-      });
      // console.log(this.state.players.get(client.auth.uid).tileset);
       this.state.shop.assignShop(this.state.players.get(client.auth.uid));
       if (this.state.players.size >= 8) {

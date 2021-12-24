@@ -132,6 +132,7 @@ class Game extends Component {
 
       this.room.state.players.onAdd = (player) => {
         this.gameContainer.initializePlayer(player);
+
         player.onChange = ((changes) => {
           if(player.id == this.state.currentPlayerId){
             this.setState({
@@ -242,6 +243,7 @@ class Game extends Component {
           };
 
       };
+      
       this.room.state.players.onRemove = (player, key) => {
         this.gameContainer.onPlayerRemove(player, key)
       };

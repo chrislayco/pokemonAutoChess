@@ -22,13 +22,14 @@ class GameRoom extends colyseus.Room {
   onCreate(options) {
     console.log(`create game room`);
     this.setState(new GameState());
-    this.maxClients = 8;
+    this.maxClients = 10;
     this.eloEngine = new EloRank();
+    this.options = options;
     for (const id in options.users) {
       const user = options.users[id];
       //console.log(user);
       if (user.isBot) {
-        this.state.players.set(id, new Player(user.id, user.name, user.elo, user.avatar, true, this.state.specialCells, this.state.mapType, this.state.players.size + 1, `${this.state.mapType}0`));
+        this.state.players.set(id, new Player(user.id, user.name, user.elo, user.avatar, true, this.state.specialCells, this.state.mapType, this.state.players.size + 1, `${this.state.mapType}0`, true));
         this.state.botManager.addBot(this.state.players.get(id));
         this.state.shop.assignShop(this.state.players.get(id));
       }

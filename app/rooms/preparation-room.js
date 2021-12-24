@@ -11,7 +11,8 @@ const {
   OnToggleReadyCommand,
   OnMessageCommand,
   OnAddBotCommand,
-  OnRemoveBotCommand
+  OnRemoveBotCommand,
+  OnSwitchCommand
 } = require('./commands/preparation-commands');
 
 class PreparationRoom extends colyseus.Room {
@@ -26,7 +27,7 @@ class PreparationRoom extends colyseus.Room {
     console.log('create preparation room');
     let self = this;
     this.setState(new PreparationState());
-    this.maxClients = 8;
+    this.maxClients = 10;
     
     Bot.find({}, ['avatar','elo'], null, (err, bots) => {
       if(bots){
@@ -61,6 +62,13 @@ class PreparationRoom extends colyseus.Room {
     this.onMessage('new-message', (client, message) => {
       try {
         this.dispatcher.dispatch(new OnMessageCommand(), {client, message});
+      } catch (error) {
+        console.log(error);
+      }
+    });
+    this.onMessage('switch', (client, message) => {
+      try {
+        this.dispatcher.dispatch(new OnSwitchCommand(), client);
       } catch (error) {
         console.log(error);
       }

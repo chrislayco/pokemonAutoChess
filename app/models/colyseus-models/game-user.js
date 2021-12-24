@@ -3,7 +3,7 @@ const MapTileset = require('./map-tileset');
 const Schema = schema.Schema;
 
 class GameUser extends Schema {
-  constructor(id, name, elo, avatar, isBot, ready, map) {
+  constructor(id, name, elo, avatar, isBot, ready, map, isPlayer) {
     super();
     this.assign({
       id: id,
@@ -12,7 +12,8 @@ class GameUser extends Schema {
       ready: ready,
       isBot: isBot,
       elo: elo,
-      map: new MapTileset(map)
+      map: new MapTileset(map),
+      isPlayer: isPlayer
     });
   }
 
@@ -28,7 +29,8 @@ schema.defineTypes(GameUser, {
   ready: 'boolean',
   isBot: 'boolean',
   elo: 'uint16',
-  map: MapTileset
+  map: MapTileset,
+  isPlayer: 'boolean'
 });
 
 module.exports = GameUser;

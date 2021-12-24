@@ -116,6 +116,10 @@ class Preparation extends Component {
         this.room.send('toggle-ready');
     }
 
+    switch(){
+        this.room.send('switch');
+    }
+
     startGame(){
         firebase.auth().currentUser.getIdToken().then(token =>{
             let allUsersReady = true;
@@ -210,6 +214,7 @@ class Preparation extends Component {
                         removeBot={this.removeBot.bind(this)}
                         toggleReady={this.toggleReady.bind(this)}
                         startGame={this.startGame.bind(this)}
+                        switch={this.switch.bind(this)}
                     />
                     <Chat 
                         messages={this.state.messages}

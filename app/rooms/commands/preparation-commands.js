@@ -8,7 +8,8 @@ class OnJoinCommand extends Command {
 
     UserMetadata.findOne({'uid':auth.uid},(err, user)=>{
       if(user){
-        this.state.users.set(client.auth.uid, new GameUser(user.uid, user.displayName, user.elo, user.avatar, false, false, user.map));
+        let shouldBePlayer = this.state.getNumberOfPlayers() <= 8;
+        this.state.users.set(client.auth.uid, new GameUser(user.uid, user.displayName, user.elo, user.avatar, false, false, user.map, shouldBePlayer));
         this.room.broadcast('messages', {
           'name': 'Server',
           'payload': `${ user.displayName } joined.`,
@@ -55,6 +56,34 @@ class OnMessageCommand extends Command {
   }
 }
 
+class OnSwitchCommand extends Command {
+  execute(client) {
+    //console.log('observers', this.state.getNumberOfObservers());
+    //console.log('players', this.state.getNumberOfPlayers());
+    //console.log(this.state.users.get(client.auth.uid).isPlayer);
+    if(this.state.users.get(client.auth.uid).isPlayer && this.state.getNumberOfObservers() <2){
+      //console.log('switch to obsver');
+      this.state.users.get(client.auth.uid).isPlayer = false;
+      this.room.broadcast('messages', {
+        'name': 'Server',
+        'payload': `${ this.state.users.get(client.auth.uid).name } switched to Observer.`,
+        'avatar': `${ this.state.users.get(client.auth.uid).avatar }`,
+        'time':Date.now()
+      }); 
+    }
+    else if(!this.state.users.get(client.auth.uid).isPlayer && this.state.getNumberOfPlayers() <8){
+      //console.log('switch to player');
+      this.state.users.get(client.auth.uid).isPlayer = true;
+      this.room.broadcast('messages', {
+        'name': 'Server',
+        'payload': `${ this.state.users.get(client.auth.uid).name } switched to Player.`,
+        'avatar': `${ this.state.users.get(client.auth.uid).avatar }`,
+        'time':Date.now()
+      }); 
+    }
+  }
+}
+
 class OnLeaveCommand extends Command {
   execute({client, consented}) {
     if(client && client.auth && client.auth.displayName){
@@ -77,7 +106,7 @@ class OnToggleReadyCommand extends Command {
 
 class OnAddBotCommand extends Command {
   execute() {
-    if (this.state.users.size < 8) {
+    if (this.state.getNumberOfPlayers() < 8) {
       let botList = [];
       this.room.elos.forEach((value, key)=>{
         botList.push(key);
@@ -116,7 +145,8 @@ class OnAddBotCommand extends Command {
           NORMAL:'NORMAL0',
           GRASS:'GRASS0',
           WATER:'WATER0'
-        }));
+        },
+        true));
       this.room.broadcast('messages', {
         'name': 'Server',
          'payload': `Bot ${ bot } added.`,
@@ -153,5 +183,6 @@ module.exports = {
   OnToggleReadyCommand: OnToggleReadyCommand,
   OnMessageCommand: OnMessageCommand,
   OnAddBotCommand: OnAddBotCommand,
-  OnRemoveBotCommand: OnRemoveBotCommand
+  OnRemoveBotCommand: OnRemoveBotCommand,
+  OnSwitchCommand: OnSwitchCommand
 };

@@ -9,6 +9,26 @@ class PreparationState extends schema.Schema {
       gameStarted: false
     });
   }
+
+  getNumberOfPlayers(){
+    let p = 0;
+    this.users.forEach(u=>{
+      if (u.isPlayer){
+        p++;
+      }
+    });
+    return p;
+  }
+
+  getNumberOfObservers(){
+    let p = 0;
+    this.users.forEach(u=>{
+      if (!u.isPlayer){
+        p++;
+      }
+    });
+    return p;
+  }
 }
 
 schema.defineTypes(PreparationState, {

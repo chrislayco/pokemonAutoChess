@@ -4,6 +4,7 @@ const LeaderboardInfo = require('../../models/colyseus-models/leaderboard-info')
 const Chat = require('../../models/mongo-models/chat');
 const Filter = require('bad-words');
 const LobbyUser = require('../../models/colyseus-models/lobby-user');
+const openRoom = require('../../models/colyseus-models/open-room');
 
 class LobbyState extends schema.Schema {
   constructor() {
@@ -37,7 +38,8 @@ class LobbyState extends schema.Schema {
 schema.defineTypes(LobbyState, {
   messages: [Message],
   users: {map: LobbyUser},
-  leaderboard: [LeaderboardInfo]
+  leaderboard: [LeaderboardInfo],
+  openRooms: [openRoom]
 });
 
 module.exports = LobbyState;

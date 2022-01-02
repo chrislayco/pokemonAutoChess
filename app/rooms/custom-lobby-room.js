@@ -61,7 +61,6 @@ class CustomLobbyRoom extends colyseus.LobbyRoom {
       });
     });
 
-
     this.onMessage('new-message', (client, message) => {
       if(message.payload != ''){
         this.state.addMessage(message.name, message.payload, message.avatar, Date.now(), true);

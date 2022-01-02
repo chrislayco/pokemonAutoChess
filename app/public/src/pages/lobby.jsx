@@ -93,6 +93,7 @@ class Lobby extends Component {
                         });
                       
                         this.room.onMessage('+', ([roomId, room]) => {
+                            console.log(room);
                             if(room.name == 'room' && this._ismounted){
                                 const roomIndex = this.state.allRooms.findIndex((room) => room.roomId === roomId);
                                 if (roomIndex !== -1) {
@@ -107,6 +108,7 @@ class Lobby extends Component {
                         });
                     
                         this.room.onMessage('-', (roomId) => {
+                            console.log(roomId);
                             if(this._ismounted){
                                 const allRooms = this.state.allRooms.filter((room) => room.roomId !== roomId);
                                 this.setState({allRooms: allRooms});

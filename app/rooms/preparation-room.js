@@ -11,7 +11,8 @@ const {
   OnToggleReadyCommand,
   OnMessageCommand,
   OnAddBotCommand,
-  OnRemoveBotCommand
+  OnRemoveBotCommand,
+  OnTitleMetadataCommand
 } = require('./commands/preparation-commands');
 
 class PreparationRoom extends colyseus.Room {
@@ -74,6 +75,13 @@ class PreparationRoom extends colyseus.Room {
     this.onMessage('removeBot', (client, message) => {
       try {
         this.dispatcher.dispatch(new OnRemoveBotCommand());
+      } catch (error) {
+        console.log(error);
+      }
+    });
+    this.onMessage('title-metadata', (client, message) => {
+      try {
+        this.dispatcher.dispatch(new OnTitleMetadataCommand(), {client, message});
       } catch (error) {
         console.log(error);
       }

@@ -17,6 +17,8 @@ class Preparation extends Component {
             users: {},
             user:{},
             currentText: '',
+            currentTitle:'',
+            title:'',
             gameId: '',
             isSignedIn: false,
             toLobby: false,
@@ -84,6 +86,16 @@ class Preparation extends Component {
             this.setState({users: this.room.state.users});
         };
 
+        this.room.state.onChange = (changes) => {
+            changes.forEach(change => {
+                if(change.field == 'title'){
+                    this.setState({
+                        title: change.value
+                    });
+                }
+            });
+        };
+
         this.room.state.users.onRemove = (player, key) => {
             this.setState({users: this.room.state.users});
         };
@@ -93,6 +105,16 @@ class Preparation extends Component {
         e.preventDefault();
         this.sendMessage(this.state.currentText);
         this.setState({currentText: ""});
+    }
+
+    handleTitleSubmit(e){
+        e.preventDefault();
+        this.room.send('title-metadata', {title: this.state.currentTitle});
+    }
+
+    setTitle(e){
+        e.preventDefault();
+        this.setState({currentTitle: e.target.value});
     }
     
     setCurrentText (e) {
@@ -166,6 +188,7 @@ class Preparation extends Component {
     toLobby(){
         this.room.leave();
     }
+    
 
   render() {
     const preparationStyle = {
@@ -206,6 +229,9 @@ class Preparation extends Component {
                     <PreparationMenu
                         id={this.id}
                         users={this.state.users}
+                        title={this.state.title}
+                        handleTitleSubmit={this.handleTitleSubmit.bind(this)}
+                        setTitle={this.setTitle.bind(this)}
                         addBot={this.addBot.bind(this)}
                         removeBot={this.removeBot.bind(this)}
                         toggleReady={this.toggleReady.bind(this)}

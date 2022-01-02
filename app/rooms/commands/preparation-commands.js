@@ -1,4 +1,5 @@
 const Command = require('@colyseus/command').Command;
+const updateLobby = require('colyseus').updateLobby;
 const GameUser = require('../../models/colyseus-models/game-user');
 const UserMetadata = require('../../models/mongo-models/user-metadata');
 
@@ -48,6 +49,7 @@ class OnMessageCommand extends Command {
       console.error('bad words library error');
     }
     message.payload = safePayload;
+    message.time = Date.now();
     this.room.broadcast('messages', message);
   }
 }
@@ -143,6 +145,23 @@ class OnRemoveBotCommand extends Command {
   }
 }
 
+class OnTitleMetadataCommand extends Command{
+  execute({client, message}){
+    if(message.title != ''){
+      this.state.title = message.title;
+      this.room.broadcast('messages', {
+        'name': 'Server',
+        'payload': `${client.auth.displayName} changed the room name to ${message.title}`,
+        'avatar': 'magnemite',
+        'time': Date.now()
+      });
+      this.setMetadata({
+        title: message.title.slice(0,15)
+      }).then(() => updateLobby(this));
+    }
+  }
+}
+
 module.exports = {
   OnJoinCommand: OnJoinCommand,
   OnGameStartCommand: OnGameStartCommand,
@@ -150,5 +169,6 @@ module.exports = {
   OnToggleReadyCommand: OnToggleReadyCommand,
   OnMessageCommand: OnMessageCommand,
   OnAddBotCommand: OnAddBotCommand,
-  OnRemoveBotCommand: OnRemoveBotCommand
+  OnRemoveBotCommand: OnRemoveBotCommand,
+  OnTitleMetadataCommand: OnTitleMetadataCommand
 };
